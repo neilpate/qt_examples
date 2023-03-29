@@ -8,8 +8,6 @@ from PySide6.QtQuick import QQuickView
 # global variables
 res  = None
 
-
-#from backend import Qt_Signals
 from backend import backendSignals, backendButtons, backendInputText
 
 if __name__ == '__main__':
