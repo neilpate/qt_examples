@@ -21,7 +21,7 @@ class Backend(QObject):
         print("status :", status)
         if not(status): # clear when not authorized
             print("to update text")
-            self.update_operatorNameInputText.emit(" ")
+            self.update_operatorNameInputText.emit("--")
 
 
 def exitMain(view):
