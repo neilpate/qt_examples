@@ -13,7 +13,6 @@ from backend import backendSignals, backendButtons, backendInputText
 if __name__ == '__main__':
     app = QGuiApplication(sys.argv)
     view = QQuickView()
-#    qml_file = os.fspath(Path(__file__).resolve().parent / 'qml/main_view.qml')
     qml_file = os.fspath(Path(__file__).resolve().parent / 'qml/Screen_default.qml')
     view.setSource(QUrl.fromLocalFile(qml_file))
     if view.status() == QQuickView.Error:

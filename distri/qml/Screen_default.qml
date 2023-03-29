@@ -42,8 +42,8 @@ Rectangle {
         anchors.centerIn: screen_default
     }
 
-    Main_view {
-        id: main_view
+    Screen01 {
+        id: screen01
     }
 }    
 
