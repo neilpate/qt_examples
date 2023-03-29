@@ -8,8 +8,6 @@ Dialog {
 
     standardButtons: Dialog.Ok | Dialog.Cancel
 
-    anchors.centerIn: mainFrameTVE
-
     onAccepted: { 
             console.log("OK clicked")
             Qt.callLater(Qt.quit)

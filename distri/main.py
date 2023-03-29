@@ -8,57 +8,18 @@ from PySide6.QtQuick import QQuickView
 # global variables
 res  = None
 
-class Backend(QObject):
 
-    update_operatorAuthorizedText  = Signal(str, arguments=['operatorAuthorizedText'])
-    update_operatorAuthorizedColor = Signal(str, arguments=['operatorAuthorizedColor'])
-    update_operatorNameInputText   = Signal(str, arguments=['operatorNameInputText'])
-    
-    def update_authorizationStatus(self, txt, clr, status):
-        # Pass the text to QML.
-        self.update_operatorAuthorizedText.emit(txt)
-        self.update_operatorAuthorizedColor.emit(clr)
-        print("status :", status)
-        if not(status): # clear when not authorized
-            print("to update text")
-            self.update_operatorNameInputText.emit(" ")
-
-
-def exitMain(view):
-    # Deleting the view before it goes out of scope is required to make sure all child QML instances
-    # are destroyed in the correct order.
-    del view
-    sys.exit(res)
-
-def playAction():
-    print("Play button clicked")
-
-def stopAction():
-    print("Stop button clicked")
-
-def nameAction(str):
-    print("Operator name received: ",  str)
-    if checkAuthorization(str) :
-        print("Authorized")
-        backend.update_authorizationStatus("Authorized", "green", True)
-    else:
-        print("Not authorized")
-        backend.update_authorizationStatus("Not Authorized", "red", False)
-
-# this procedure is to be somewhere else in the system
-def checkAuthorization(str):
-    if str == "Harold" :
-        return True
-    else:
-        return False
-    
+#from backend import Qt_Signals
+from backend import backendSignals, backendButtons, backendInputText
 
 if __name__ == '__main__':
     app = QGuiApplication(sys.argv)
     view = QQuickView()
-    qml_file = os.fspath(Path(__file__).resolve().parent / 'qml/main_view.qml')
+#    qml_file = os.fspath(Path(__file__).resolve().parent / 'qml/main_view.qml')
+    qml_file = os.fspath(Path(__file__).resolve().parent / 'qml/Screen_default.qml')
     view.setSource(QUrl.fromLocalFile(qml_file))
     if view.status() == QQuickView.Error:
+        print("qml file -not- loaded")
         sys.exit(-1)
     print("qml file loaded")
     
@@ -68,30 +29,16 @@ if __name__ == '__main__':
     # connect to default signals
     root = view.rootObject()
     
-    # exit when in Dialog 'OK' is clicked
-    view.engine().quit.connect(lambda: exitMain(view))
+    buttons = backendButtons(view= view, root= root)
+    print("Buttons connected")
 
-    # execute play action
-    button_play = root.findChild(QObject, "button_play")
-    button_play.clicked.connect(lambda: playAction())
-
-    # execute stop action
-    button_stop = root.findChild(QObject, "button_stop")
-    button_stop.clicked.connect(lambda: stopAction())
-
-    # execute stop action
-    operator_name = root.findChild(QObject, "operatorNameInput")
-    operator_name.accepted.connect(lambda: nameAction(operator_name.getText(0,100)))
-
-    # Define our backend object, which we pass to QML.
-    backend = Backend()
-
-    root.setProperty('backend', backend)
-
-    # Initial call to trigger first update. Must be after the setProperty to connect signals.
-#    backend.update_text("NO sunshine")
-   
+    # Define our backend signal objects, which we pass to QML.
+    signals = backendSignals()
+    root.setProperty('backend', signals)
     print("Signals connected")
+
+    textInput = backendInputText(root= root, localBackend= signals)
+    print("Text inputs connected")
 
     # startup viewer
     view.show()
