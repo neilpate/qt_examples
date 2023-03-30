@@ -4,9 +4,9 @@ from pathlib         import Path
 from PySide6.QtCore  import QObject, QUrl, Qt, Signal, Slot
 from PySide6.QtGui   import QGuiApplication
 from PySide6.QtQuick import QQuickView
+import zmq
 
-# global variables
-res  = None
+from constants import *
 
 # --------------------------------------------------------------------------------------
 class backendSignals(QObject):
@@ -55,21 +55,39 @@ class backendButtons(QObject):
         print("Stop button clicked")
 
 # --------------------------------------------------------------------------------------
+
+import zmq
+
 class backendInputText(QObject):
 
     def __init__(self, root, localBackend):
+
+        # setup as server
+        self.zmqContext = zmq.Context()
+        self.zmqSocket = self.zmqContext.socket(zmq.REQ)
+        self.zmqSocket.connect("tcp://{}:{}".format(host, port))
+
         # execute name handling action
         operator_name = root.findChild(QObject, "operatorNameInput")
-        operator_name.accepted.connect(lambda: backendInputText.nameAction(operator_name.getText(0,100), localBackend))
-
+        operator_name.accepted.connect(lambda: backendInputText.nameAction(operator_name.getText(0,100), localBackend, self.zmqSocket))
+         
     # check authorization and update GUI
-    def nameAction(str, backend):
-        print("Operator name received: ", str)
-        if backendInputText.checkAuthorization(str) :
-            print("Authorized")
+    def nameAction(name, backend, socket):
+
+        print("GUI - Requesting authorization of operator :", name)
+
+        # Request authorization
+        request = "AUTH " + name
+        socket.send_string(request)
+        # wait for reply
+        authorized = socket.recv_string()  # blocking -> need to become more reliable
+        print("GUI - Received authorization status :", authorized)
+
+        if authorized == "Approved" :
+            print("GUI - Received authorization")
             backend.update_authorizationStatus("Authorized", "green", True)
         else:
-            print("Not authorized")
+            print("GUI - NOT received authorization")
             backend.update_authorizationStatus("Not Authorized", "red", False)
 
     # this procedure is to be somewhere else in the system

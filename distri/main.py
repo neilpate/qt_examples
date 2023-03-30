@@ -5,8 +5,7 @@ from PySide6.QtCore  import QObject, QUrl, Qt, Signal, Slot
 from PySide6.QtGui   import QGuiApplication
 from PySide6.QtQuick import QQuickView
 
-# global variables
-res  = None
+from constants import *
 
 from backend import backendSignals, backendButtons, backendInputText
 
