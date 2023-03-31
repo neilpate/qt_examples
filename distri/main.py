@@ -15,9 +15,9 @@ if __name__ == '__main__':
     qml_file = os.fspath(Path(__file__).resolve().parent / 'qml/Screen_default.qml')
     view.setSource(QUrl.fromLocalFile(qml_file))
     if view.status() == QQuickView.Error:
-        print("qml file -not- loaded")
+        print("MAIN - qml file NOT loaded")
         sys.exit(-1)
-    print("qml file loaded")
+    print("MAIN - qml file loaded")
     
     # remove window borders
 #    view.setFlags(Qt.FramelessWindowHint)
@@ -26,15 +26,15 @@ if __name__ == '__main__':
     root = view.rootObject()
     
     buttons = backendButtons(view= view, root= root)
-    print("Buttons connected")
+    print("MAIN - Buttons have Python connect")
 
     # Define our backend signal objects, which we pass to QML.
     signals = backendSignals()
     root.setProperty('backend', signals)
-    print("Signals connected")
+    print("MAIN - Signals have Python connect")
 
     textInput = backendInputText(root= root, localBackend= signals)
-    print("Text inputs connected")
+    print("MAIN - Text inputs have Python connect")
 
     # startup viewer
     view.show()

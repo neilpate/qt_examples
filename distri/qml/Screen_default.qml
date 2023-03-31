@@ -22,6 +22,7 @@ Rectangle {
     property string operatorNameInputText:   ""
     
     property QtObject backend
+    property bool authorizationApproved
 
     Connections {
         target: backend

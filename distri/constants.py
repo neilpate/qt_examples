@@ -7,3 +7,5 @@ res  = None
 
 authorizedPersons = ["Harold", "Jan"]
 
+authorizationApproved = False
+

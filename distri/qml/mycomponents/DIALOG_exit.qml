@@ -9,10 +9,10 @@ Dialog {
     standardButtons: Dialog.Ok | Dialog.Cancel
 
     onAccepted: { 
-            console.log("OK clicked")
+            console.log("GUI - Dialog OK clicked, perform EXIT")
             Qt.callLater(Qt.quit)
     }
-    onRejected: console.log("Cancel EXIT clicked")
+    onRejected: console.log("GUI - Dialog EXIT clicked, cancel EXIT")
 }
 
 

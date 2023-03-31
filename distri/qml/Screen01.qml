@@ -529,15 +529,6 @@ Rectangle {
                 height: 20
                 color: "#ffffff"
                 border.color: "#527075"
-//                Text {
-//                    id: operatorName
-//                    color: "#527075"
-//                    text: qsTr("-")
-//                    anchors.fill: parent
-//                    font.pixelSize: 16
-//                    horizontalAlignment: Text.AlignLeft
-//                    verticalAlignment: Text.AlignVCenter
-//                    leftPadding: 5
 // ---- new code -------------------------------- start
 
                 TextInput {
@@ -562,7 +553,6 @@ Rectangle {
                 }
 // ---- new code -------------------------------- end
 
-//                }
             }
         }
 
@@ -606,6 +596,7 @@ Rectangle {
                 checkable: true
                 display: AbstractButton.IconOnly
                 icon.color: "#000000"
+                onClicked: (screen_default.authorizationApproved ? appFrame.color = "black" : appFrame.color = "#f3f8f9")
             }
 
 
@@ -619,6 +610,7 @@ Rectangle {
                 hoverEnabled: false
                 checkable: true
                 display: AbstractButton.IconOnly
+                onClicked: appFrame.color = "#f3f8f9"
             }
 
           BUTTON_exit {
@@ -645,6 +637,7 @@ Rectangle {
         width: 1665
         height: 900
         color: "#f3f8f9"
+//        color: "black"
         radius: 20
         border.color: "#527075"
         anchors.right: parent.right

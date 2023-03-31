@@ -19,9 +19,8 @@ class backendSignals(QObject):
         # Pass the text to QML.
         self.update_operatorAuthorizedText.emit(txt)
         self.update_operatorAuthorizedColor.emit(clr)
-        print("status :", status)
         if not(status): # clear when not authorized
-            print("invalidate text")
+            print("GUI - Set default text in operator input")
             self.update_operatorNameInputText.emit("--")
 
 # --------------------------------------------------------------------------------------
@@ -33,7 +32,7 @@ class backendButtons(QObject):
         
        # execute play action
         button_play = self.root.findChild(QObject, "button_play")
-        button_play.clicked.connect(lambda: backendButtons.playAction())
+        button_play.clicked.connect(lambda: backendButtons.playAction(self.root))
 
         # execute stop action
         button_stop = self.root.findChild(QObject, "button_stop")
@@ -48,15 +47,19 @@ class backendButtons(QObject):
         del view
         sys.exit(res)
 
-    def playAction():
-        print("Play button clicked")
+    def playAction(root):
+        print("GUI - Play button clicked")
+        authorizationApproved = root.property('authorizationApproved')
+
+        if authorizationApproved:
+            print("GUI - Play function authorized")
+        else:
+            print("GUI - Play function NOT authorized")
 
     def stopAction():
-        print("Stop button clicked")
+        print("GUI - Stop button clicked")
 
 # --------------------------------------------------------------------------------------
-
-import zmq
 
 class backendInputText(QObject):
 
@@ -69,10 +72,10 @@ class backendInputText(QObject):
 
         # execute name handling action
         operator_name = root.findChild(QObject, "operatorNameInput")
-        operator_name.accepted.connect(lambda: backendInputText.nameAction(operator_name.getText(0,100), localBackend, self.zmqSocket))
+        operator_name.accepted.connect(lambda: backendInputText.nameAction(operator_name.getText(0,100), localBackend, self.zmqSocket, root))
          
     # check authorization and update GUI
-    def nameAction(name, backend, socket):
+    def nameAction(name, backend, socket, root):
 
         print("GUI - Requesting authorization of operator :", name)
 
@@ -85,19 +88,13 @@ class backendInputText(QObject):
 
         if authorized == "Approved" :
             print("GUI - Received authorization")
+            authorizationApproved = True
             backend.update_authorizationStatus("Authorized", "green", True)
         else:
             print("GUI - NOT received authorization")
+            authorizationApproved = False
             backend.update_authorizationStatus("Not Authorized", "red", False)
 
-    # this procedure is to be somewhere else in the system
-    def checkAuthorization(str):
-        if str == "Harold" :
-            return True
-        else:
-            return False
-
-
-
+        root.setProperty('authorizationApproved', authorizationApproved)
 
 
