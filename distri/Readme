@@ -1,0 +1,11 @@
+
+To startup this demo follow next sequence:
+
+    1- python3 authenticator.py
+    2- python3 main.py
+    
+When starting [1] a zmq interface process will start which can check if approval
+can be given for a given operator.
+
+Starting [2], this will fire up the GUI
+
