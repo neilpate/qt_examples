@@ -20,7 +20,7 @@ if __name__ == '__main__':
     print("MAIN - qml file loaded")
     
     # remove window borders
-#    view.setFlags(Qt.FramelessWindowHint)
+    view.setFlags(Qt.FramelessWindowHint)
     
     # connect to default signals
     root = view.rootObject()
