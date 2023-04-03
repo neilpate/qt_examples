@@ -1,0 +1,8 @@
+
+There are 3 client programs, using different implementations/approaches:
+    1- notifier.py
+    2- my_asyncio.py
+    3- thread.py
+    
+After strarting the client, the server (server.py) can be started.
+
